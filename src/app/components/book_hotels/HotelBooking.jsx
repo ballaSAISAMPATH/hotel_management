@@ -1,12 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Add_hotels from './Add_hotels';
 import HotelCard from './HotelCard';
+import axios from 'axios';
+import HotelsSplitIntoEach from './hotelsSplitIntoEach';
+import { useSelector,useDispatch } from 'react-redux';
+import { addHotelActions } from '../../../Store/AddHotel';
 function submitForm(event){
   event.preventDefault();
   console.log(event);
   
 }
 export default function HotelBooking() {
+  const hotelsArray=useSelector((state)=>state.addHotelInfo.newHotelsArray)
+  const dispatch=useDispatch();
+  async function fetchHotels() {
+    console.log("fetching");
+    
+      try {
+        await axios.get("http://localhost:1216/getHotels").then((response) => {
+          dispatch(addHotelActions.newHotelsArrayFunction(response.data));
+        });
+      } catch (error) {
+        console.error("Failed to fetch hotels:", error);
+      }
+    }
+    useEffect(() => {
+      fetchHotels();
+    }, []);
+  
   return (
     <div>
       <form onSubmit={()=>submitForm(event)} action="submit" method="POST">
@@ -37,8 +58,9 @@ export default function HotelBooking() {
         </div>
     <input type="submit" className='btn-primary' />
       </form>
-      <Add_hotels/>
-      <HotelCard/>
+      <Add_hotels fetchHotels={fetchHotels}/>
+      
+      <HotelsSplitIntoEach fetchHotels={fetchHotels} hotelsArray={hotelsArray}/>
     </div>
   )
 }

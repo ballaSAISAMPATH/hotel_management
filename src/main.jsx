@@ -6,7 +6,7 @@ import HotelBooking from './app/components/book_hotels/HotelBooking.jsx'
 import Bookings from './bookings'
 import Wishlist from './wishlist'
 import App from './App.jsx'
-import store from './app/store'
+import store from './Store/store.js'
 import { Provider } from 'react-redux'
 const router=createBrowserRouter([
   {
